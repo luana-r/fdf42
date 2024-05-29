@@ -6,7 +6,7 @@
 /*   By: lsouza-r <lsouza-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 15:37:23 by lsouza-r          #+#    #+#             */
-/*   Updated: 2024/05/06 20:10:13 by lsouza-r         ###   ########.fr       */
+/*   Updated: 2024/05/22 16:03:25 by lsouza-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,6 @@ void	fdf_file(const char *file_name)
 		ft_error("File is not fdf type.");
 }
 
-// void	ft_build_mesh(char **splitted, t_mesh *points_mesh)
-// {
-	
-// }
-
-
-
 void	ft_gnl_map(const char *file_path, t_mesh **mesh, t_mesh_controller *mesh_data)
 {
 	int		fd;
@@ -77,6 +70,8 @@ void	ft_gnl_map(const char *file_path, t_mesh **mesh, t_mesh_controller *mesh_da
 	line = get_next_line(fd);
 	y = 0;
 	mesh_data->width = 0;
+	mesh_data->max_z = 0;
+	mesh_data->min_z = 0;
 	while (line)
 	{
 		splitted = ft_split(line, ' ');
@@ -84,6 +79,10 @@ void	ft_gnl_map(const char *file_path, t_mesh **mesh, t_mesh_controller *mesh_da
 		while(splitted[x] != NULL)
 		{
 			ft_mesh_add_back(mesh, ft_new_point(x, y, splitted[x]));
+			if (ft_atoi(splitted[x]) > mesh_data->max_z)
+				mesh_data->max_z = ft_atoi(splitted[x]);
+			if (ft_atoi(splitted[x]) < mesh_data->min_z)
+				mesh_data->min_z = ft_atoi(splitted[x]);
 			x++;
 		}
 		if (y == 0)
@@ -101,28 +100,5 @@ void	ft_gnl_map(const char *file_path, t_mesh **mesh, t_mesh_controller *mesh_da
 		ft_error("Error: The map needs at least two lines.");
 	else
 		mesh_data->height = y;
-	mesh_data->edge_size = 10;
-	// i = mesh;
-	// while (i != NULL)
-	// {
-	// 	i->x = i->x * 10;
-	// 	i->y = i->y * 10;
-	// 	i = i->next;
-	// }
-	// // exibir pontos da lista
-	// i = mesh;
-	// while (i != NULL)
-	// {
-	// 	ft_putnbr_fd((* i).x, 1);
-	// 	ft_putchar_fd(' ', 1);
-	// 	ft_putnbr_fd((* i).y, 1);
-	// 	ft_putchar_fd(' ', 1);
-	// 	ft_putnbr_fd((* i).z, 1);
-	// 	ft_putchar_fd('\n', 1);
-	// 	i = i->next;
-	// }
-	
-	//ft_points_coordinates(mesh, &mesh_data, img);
-	//ft_draw_line(img);
 	close(fd);
 } 
