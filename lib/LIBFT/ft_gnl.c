@@ -6,7 +6,7 @@
 /*   By: lsouza-r <lsouza-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:52:47 by lsouza-r          #+#    #+#             */
-/*   Updated: 2024/04/18 20:04:30 by lsouza-r         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:55:11 by lsouza-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ char	*get_next_line(int fd)
 	line_to_return = ft_build_line_to_return(full_line);
 	line_backup = get_line_after_bslash_n(full_line);
 	free(full_line);
+	full_line = NULL;
 	if (*line_to_return == '\0' && *line_backup == '\0')
 	{
 		free(line_to_return);
 		free(line_backup);
 		line_backup = NULL;
+		line_to_return = NULL;
 		return (NULL);
 	}
 	return (line_to_return);
@@ -84,8 +86,12 @@ char	*get_line_after_bslash_n(char *line)
 	i = 0;
 	while (line[i] != '\0' && line[i] != '\n')
 		i++;
-	if (line[i] == '\n')
+	if (line[i] == '\n' && line[i + 1] != '\0')
+	{
 		i += 1;
-	new_line_begin = ft_strdup(line + i);
+		new_line_begin = ft_strdup(line + i);
+	}
+	else
+		new_line_begin = ft_strdup("");
 	return (new_line_begin);
 }

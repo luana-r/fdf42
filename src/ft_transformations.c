@@ -6,32 +6,47 @@
 /*   By: lsouza-r <lsouza-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 18:00:32 by lsouza-r          #+#    #+#             */
-/*   Updated: 2024/05/29 20:53:24 by lsouza-r         ###   ########.fr       */
+/*   Updated: 2024/06/09 20:57:28 by lsouza-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	ft_isometric(t_mesh *mesh, t_mesh_controller *mesh_data)
+void	ft_isometric(t_mesh *node_1, t_mesh *node_2)
 {
-	t_mesh	*current_node;
-	int		save_x;
-	int		save_y;
-	
-	current_node = mesh;
+	int	save_x;
+	int	save_y;
 
-	mesh_data->offset_x = WIDTH / 3;
-	mesh_data->offset_y = HEIGHT / 3;
-	while (current_node != NULL)
-	{
-		current_node->x = (current_node->x * mesh_data->scale_factor);
-		current_node->y = (current_node->y * mesh_data->scale_factor);
-		save_x = current_node->x;
-		save_y = current_node->y;
-		current_node->x = (save_x - save_y) * cos(PI/6);
-		current_node->y = (save_x + save_y) * sin(PI/6) - (current_node->z);
-		current_node->x += mesh_data->offset_x;
-		current_node->y += mesh_data->offset_y;
-		current_node = current_node->next;
-	}
+	save_x = node_1->x;
+	save_y = node_1->y;
+	node_1->x = (save_x - save_y) * cos(PI / 6);
+	node_1->y = (save_x + save_y) * sin(PI / 6) - (node_1->z);
+	save_x = node_2->x;
+	save_y = node_2->y;
+	node_2->x = (save_x - save_y) * cos(PI / 6);
+	node_2->y = (save_x + save_y) * sin(PI / 6) - (node_2->z);
+}
+
+void	scale(t_mesh *node_1, t_mesh *node_2, t_fdf_ctl *mesh_data)
+{
+	node_1->x = (node_1->x * mesh_data->scale_factor);
+	node_1->y = (node_1->y * mesh_data->scale_factor);
+	node_2->x = (node_2->x * mesh_data->scale_factor);
+	node_2->y = (node_2->y * mesh_data->scale_factor);
+}
+
+void	translate(t_mesh *node_1, t_mesh *node_2, t_fdf_ctl *mesh_data)
+{
+	node_1->x += mesh_data->offset_x;
+	node_1->y += mesh_data->offset_y;
+	node_2->x += mesh_data->offset_x;
+	node_2->y += mesh_data->offset_y;
+}
+
+void	centralize(t_mesh *node_1, t_mesh *node_2, t_fdf_ctl *mesh_data)
+{
+	node_1->x -= mesh_data->width / 2;
+	node_1->y -= mesh_data->height / 2;
+	node_2->x -= mesh_data->width / 2;
+	node_2->y -= mesh_data->height / 2;
 }
